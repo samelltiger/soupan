@@ -1,20 +1,25 @@
 # coding=utf-8
 from bs4 import BeautifulSoup as bs
-import urllib.request
+import urllib.request,urllib.parse
 import time
 import requests
 import json
 
 # 获取一个页面，返回urllib的响应
-def getWebPage(url):
-    request = urllib.request.Request(url)
+def getWebPage(url,data=None):
+    request = urllib.request.Request(url,data)
     response = urllib.request.urlopen(request)
     return response
 
 # 获取一个页面，返回BeautifulSoup对象
-def getWebPageOfSoup(url):
-    response = getWebPage(url)
+def getWebPageOfSoup(url,data=None):
+    response = getWebPage(url,data=None)
     return bs(response.read(),'lxml')
+
+"""获取网站的cookie"""
+
+
+"""获取页面带有cookie"""
 
 # 通过节点的className从页面获取搜索数据(一个完整的页面)
 def getDataByClass(page_data,classes,next_class=None):
@@ -66,7 +71,6 @@ def savaToMongo(data,mg_conn,category):
                 'category': category ,
                 'status': 1 ,
             }
-            # print(dict_one)
             mg_conn.insert_one(dict_one)
             count += 1
     
@@ -82,24 +86,51 @@ def getListFromDb(fromMysqlServer,toMongoServer):
     cursor.execute(sql)
     site_list = cursor.fetchall()
 
-    # print(tdb.find().count())
     for res in site_list:
         try:
             if res['is_api']:
                 api_data = getWebPage(res['url']).read()
                 data_list = json.loads(api_data.decode("utf-8"))
                 data = getDataByApi(data_list,res['classes'].split(";"))
-                # print(data)
             else:
                 soup = getWebPageOfSoup(res['url'])
                 data = getDataByClass(soup,res['classes'].split(";"),res['next_class'])
-                # print(dict_data)
-            dict_data = savaToMongo(data,toMongoServer,res['category'])
-            print(data)
-            print(dict_data)
+            inset_count = savaToMongo(data,tdb,res['category'])
+            #可以添加一个日志记录，记录该次运行时共插入了多少条数据
+            print("time: ",getFormatTime(),'insert count：',inset_count)
             
         except UnicodeEncodeError:
-            print("UnicodeEncodeError in",__file__,"line: ",__debug__)
+            print("time: ",getFormatTime(),"\tUnicodeEncodeError in",__file__)
+
+'''获取当前的格式化时间'''
+def getFormatTime():
+    return time.strftime("%Y-%m-%d %H:%M:%S",time.localtime())
+
+'''获取网页中表单的字段和token，并返回搜索的变量名和结果'''
+def getInputName(soup):
+    form = soup.select("#form1 > input")
+    search_name = form[0].get("name")
+    token_name = form[1].get("name")
+    token = form[1].get("value")
+    dict_res = {search_name:None,token_name:token}
+    return (search_name ,dict_res)
+
+'''从百度网盘之家获取网盘地址'''
+def getSearchList(mongo_conn):
+    url = "http://wowenda.com/"
+    soup = getWebPageOfSoup( url )
+    title_list = mongo_conn.find({'status':1},{'_id':0,'title':1,'category':1})
+    title = title_list[0]
+    # for title in title_list:
+    (search_name,dict_res) = getInputName(soup)
+    dict_res[search_name] = title['title']
+    dict_res['category']  = title['category']
+    url_query = urllib.parse.urlencode(dict_res)
+    print(url+"?"+url_query)
+    # soup = getWebPageOfSoup(url,url_query)
+    # print(soup.prettify())
+    # list_res = soup.select("li.bt")
+
 
 # print(getWebPage("http://www.imooc.com").read())
 # print(getWebPageOfSoup("http://www.imooc.com"))

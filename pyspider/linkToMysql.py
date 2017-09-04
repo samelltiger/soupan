@@ -1,25 +1,21 @@
-import pymysql.cursors
+import lib.dbsFun as dbFun
 import pymongo  
 
 # import lib.OpenPageFun as op
-from lib.OpenPageFun import getListFromDb
+'''自动搜索网站中的列表'''
+import lib.OpenPageFun as op
 
-conn = pymysql.connect(host = 'localhost',
-                        user = 'root',
-                        password = '',
-                        db  = 'soupan',
-                        charset = 'utf8' ,
-                        cursorclass=pymysql.cursors.DictCursor  #使返回的数据为dict格式
-)
+conn = dbFun.getMysqlConnect('soupan')
 
-mgconn = pymongo.MongoClient("localhost",27017)
-mgclient = mgconn['test']
-mgtable = mgclient['list']
+mgclient = dbFun.getMongoConnect('test')
+mgtable = mgclient('list')
 
+# op.getListFromDb(conn,mgtable)
+
+op.getSearchList(mgtable)
 
 # sql = "select * from search_website"
 # cursor = conn.cursor()
 # cursor.execute(sql)
 # result = cursor.fetchone()
 # print(result['name'])
-getListFromDb(conn,mgtable)
