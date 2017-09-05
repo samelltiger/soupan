@@ -1,3 +1,5 @@
+# coding=utf-8
+
 '''获取数据库连接，MySQL和Mongodb'''
 import pymysql.cursors
 import pymongo  
