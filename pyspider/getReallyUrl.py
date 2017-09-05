@@ -6,6 +6,10 @@ import lib.OpenPageFun as op
 
 conn = dbFun.getMysqlConnect('soupan')
 
+if not conn:
+    print("数据库连接失败！")
+    exit()
+
 mgclient = dbFun.getMongoConnect('soupan')
 mgtable = mgclient('keywords') # 保存从各个网站上获取到的搜索关键词，以及用户反馈的关键词
 

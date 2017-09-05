@@ -11,7 +11,7 @@ def getMysqlConnect(dbname):
                             host = 'localhost',
                             db   = dbname,
                             user = 'root',
-                            password = '',
+                            password = 'ct-sch',
                             charset = 'utf8',
                             cursorclass = pymysql.cursors.DictCursor
         )
