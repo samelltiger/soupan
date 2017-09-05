@@ -241,7 +241,7 @@ def saveListToMongo(data_list,mongo_save,line_record):
 """获取网盘之家搜索结果的前100页"""
 def get100Page(opener,url_query):
     url = "http://wowenda.com/"
-    for i in range(1,2):
+    for i in range(1,100):
         yield url+url_query+"&page=%d"%(i)
 
 '''设置带有header的opener'''
