@@ -99,6 +99,7 @@ def getListFromDb(fromMysqlServer,toMongoServer):
     # cursor.execute(sql)
     # site_list = cursor.fetchone()
 
+    print("in getListFromDb")
     is_run = 1
     while is_run:
         cursor.execute(get_sql)
