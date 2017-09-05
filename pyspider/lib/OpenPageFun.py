@@ -2,7 +2,6 @@
 from bs4 import BeautifulSoup as bs
 import urllib.request,urllib.parse
 import time
-import requests
 import json
 import http.cookiejar
 
