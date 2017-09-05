@@ -14,7 +14,7 @@ def getWebPage(url,data=None):
 # 获取一个页面，返回BeautifulSoup对象
 def getWebPageOfSoup(url,data=None):
     response = getWebPage(url,data=None)
-    return bs(response.read(),'lxml')
+    return bs(response.read().decode("utf-8"),'lxml')
 
 """通过文本创建一个soup对象"""
 def getPageSoupByText(page_text):

@@ -1,3 +1,4 @@
+# coding=utf-8
 import lib.dbsFun as dbFun
 
 '''自动搜索网站中的列表'''
