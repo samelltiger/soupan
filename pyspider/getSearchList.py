@@ -15,4 +15,6 @@ mgtable = mgclient('keywords') # 保存从各个网站上获取到的搜索关�
 
 '''爬取网盘搜索结果的列表，并保存到panduoduo'''
 mg_save_panduoduo = mgclient('panduoduo')
-op.getSearchList(mgtable,mg_save_panduoduo)
+count = op.getSearchList(mgtable,mg_save_panduoduo)
+
+print(__file__,"time: ",op.getFormatTime(),'insert count：',count)

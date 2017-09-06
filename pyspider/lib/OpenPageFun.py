@@ -99,7 +99,7 @@ def getListFromDb(fromMysqlServer,toMongoServer):
     # cursor.execute(sql)
     # site_list = cursor.fetchone()
 
-    print("in getListFromDb")
+    total = 0
     is_run = 1
     while is_run:
         cursor.execute(get_sql)
@@ -121,11 +121,15 @@ def getListFromDb(fromMysqlServer,toMongoServer):
                 soup = getWebPageOfSoup(res['url'])
                 data = getDataByClass(soup,res['classes'].split(";"),res['next_class'])
             inset_count = savaToMongo(data,tdb,res['category'])
+            total += inset_count
+             
 
             up_sql = "UPDATE search_website SET status=%d where id=%d"%(0,id)
             cursor.execute(up_sql)
             #可以添加一个日志记录，记录该次运行时共插入了多少条数据
-            print("time: ",getFormatTime(),'insert count：',inset_count)
+            # print("time: ",getFormatTime(),'insert count：',inset_count)
+
+    return total
 
         except UnicodeEncodeError:
             print("time: ",getFormatTime(),"\tUnicodeEncodeError in",__file__)
@@ -158,9 +162,12 @@ def getSearchList(mongo_conn,mongo_save):
     while(is_run):
         # is_run = 0  #测试时用
         title_list = mongo_conn.find({'status':1},{'_id':1,'title':1,'category':1}).limit(1)
-        title = list(title_list)[0]
+        title = list(title_list)
         if not title:
             break
+
+        title = title[0]
+
         (search_name,dict_res) = getInputName(soup)
         dict_res[search_name] = title['title']
         dict_res['category']  = title['category']
