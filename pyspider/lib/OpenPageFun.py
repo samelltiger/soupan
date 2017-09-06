@@ -129,10 +129,12 @@ def getListFromDb(fromMysqlServer,toMongoServer):
             #可以添加一个日志记录，记录该次运行时共插入了多少条数据
             # print("time: ",getFormatTime(),'insert count：',inset_count)
 
-    return total
 
         except UnicodeEncodeError:
             print("time: ",getFormatTime(),"\tUnicodeEncodeError in",__file__)
+    
+    return total
+    
 
 '''获取当前的格式化时间'''
 def getFormatTime():

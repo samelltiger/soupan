@@ -12,6 +12,6 @@ if not conn:
 mgclient = dbFun.getMongoConnect('soupan')
 mgtable = mgclient('keywords') # 保存从各个网站上获取到的搜索关键词，以及用户反馈的关键词
 
-op.getListFromDb(conn,mgtable)
+count = op.getListFromDb(conn,mgtable)
 
-print(__file__,"time: ",op.getFormatTime(),'insert count：',count)
+print(__file__,"time: ",op.getFormatTime(),'insert count:',count)
