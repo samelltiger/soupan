@@ -211,11 +211,19 @@ def getBaiduPanUrl(mg_conn):
         mg_conn.update({"_id":title['_id']},{"$set":{"status":2}})  # 正在获取百度云地址
 
         soup = getWebPageOfSoup(title['url'])
-        next_url_tag = soup.select("div.m_down > a")[0]
+        next_url_tag = soup.select("div.m_down > a")
+        if not len(next_url_tag):
+            continue
+
+        next_url_tag = next_url_tag[0]
         next_url = next_url_tag['href']
 
         soup = getWebPageOfSoup(next_url)
-        org_url = soup.select("body > div > meta")[0]
+        org_url = soup.select("body > div > meta")
+        if not len(org_url):
+            continue
+
+        org_url = org_url[0]
         url = org_url['content']
         url = url[url.index("h"):]
         print(url)
