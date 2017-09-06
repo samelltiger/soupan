@@ -203,7 +203,7 @@ def getBaiduPanUrl(mg_conn):
         # is_run = 0
         title_list = mg_conn.find({'status':1},{'_id':1,'url':1}).limit(1)  # 爬取到盘多多地址但未得到百度云地址
         title = list(title_list)
-        print(title)
+        # print(title)
         if not len(title):
             break
 
@@ -213,7 +213,9 @@ def getBaiduPanUrl(mg_conn):
 
         soup = getWebPageOfSoup(title['url'])
         next_url_tag = soup.select("div.m_down > a")
+        print(next_url_tag)
         if not len(next_url_tag):
+            print("没有收到a标签！")
             continue
 
         next_url_tag = next_url_tag[0]
