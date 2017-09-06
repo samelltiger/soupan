@@ -203,6 +203,7 @@ def getBaiduPanUrl(mg_conn):
         # is_run = 0
         title_list = mg_conn.find({'status':1},{'_id':1,'url':1}).limit(1)  # 爬取到盘多多地址但未得到百度云地址
         title = list(title_list)
+        print(title)
         if not title:
             break
 
