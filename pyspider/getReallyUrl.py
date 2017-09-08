@@ -15,8 +15,10 @@ mgtable = mgclient('keywords') # 保存从各个网站上获取到的搜索关�
 
 '''爬取网盘搜索结果的列表，并保存到panduoduo'''
 mg_save_panduoduo = mgclient('panduoduo')
+mg_save_proxy = mgclient('proxy')
+
 
 '''获取真实百度云url'''
-count = op.getBaiduPanUrl(mg_save_panduoduo)
+count = op.getBaiduPanUrl(mg_save_panduoduo,mg_save_proxy)
 
 print(__file__,"time: ",op.getFormatTime(),'insert count：',count)

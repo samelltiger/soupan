@@ -1,9 +1,10 @@
 # coding=utf-8
 from bs4 import BeautifulSoup as bs
-import urllib.request,urllib.parse
+import urllib.request,urllib.parse,urllib.error
 import time
 import json
 import http.cookiejar
+import random
 
 # 获取一个页面，返回urllib的响应
 def getWebPage(url,data=None):
@@ -20,6 +21,19 @@ def getWebPageOfSoup(url,data=None):
 def getPageSoupByText(page_text):
     return bs(page_text,'lxml')
 
+"""通过proxy获取web页面，并将不能打开页面的代理ip删掉，返回一个soup对象"""
+def getPageByProxyOpener(url,proxy_conn):
+    while 1:
+        (proxy,opener) = getOpenerWithProxy( proxy_conn )
+        if not opener:
+            exit()
+
+        try:
+            resp = openPageWithCookie(opener,url)
+            return getPageSoupByText(resp.read())
+        except urllib.error.URLError:
+            proxy_conn.remove({"_id":proxy["_id"]})
+
 """创建一个opener,并返回个cookie和opener"""
 def getWebOpener(filename=None):
     cookie = http.cookiejar.MozillaCookieJar()
@@ -28,6 +42,18 @@ def getWebOpener(filename=None):
     handler = urllib.request.HTTPCookieProcessor(cookie)
     opener = urllib.request.build_opener(handler)
     return (cookie,opener)
+
+"""获取一个opener，带有user-agent和proxy"""
+def getOpenerWithProxy( conn ):
+    proxy = getProxyIp( conn )
+    if not proxy:
+        return (False,False)
+
+    proxy_support = urllib.request.ProxyHandler({'http':"http://"+proxy['proxy']})
+    opener = urllib.request.build_opener(proxy_support)
+    opener.addheaders = [("User-Agent", getUserAgent())]
+
+    return (proxy,opener)
 
 """带有cookie信息打开页面"""
 def openPageWithCookie(opener,url,data=None):
@@ -44,6 +70,45 @@ def getDataByClass(page_data,classes,next_class=None):
         titles = page_data.select(clas)
         data.append([one.get_text().strip() for one in titles if len(one)])        
     return data
+
+"""随机获取一个user-Agent"""
+def getUserAgent():
+    user_agent = [
+            'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0)',
+  			'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.2)',
+  			'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)',
+  			'Sogou head spider/3.0( http://www.sogou.com/docs/help/webmasters.htm#07)',
+  			'Mozilla/4.0 (compatible; MSIE 5.0; Windows NT)',
+  			'Mozilla/5.0 (Windows; U; Windows NT 5.2) Gecko/2008070208 Firefox/3.0.1',
+  			'Mozilla/5.0 (Windows; U; Windows NT 5.1) Gecko/20070309 Firefox/2.0.0.3',
+  			'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0); 360Spider',
+  			'Mozilla/5.0 (Windows; U; Windows NT 5.1) Gecko/20070803 Firefox/1.5.0.12',
+  			'Opera/9.27 (Windows NT 5.2; U; zh-cn)',
+  			'Sogou Pic Spider/3.0( http://www.sogou.com/docs/help/webmasters.htm#07)',
+  			'Mozilla/5.0 (compatible; Baiduspider/2.0; +http://www.baidu.com/search/spider.html)',
+  			'Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)',
+  			'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
+  			'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1) ;  QIHU 360EE)',
+  			'Mozilla/5.0 (compatible; Baiduspider/2.0; +http://www.baidu.com/search/spider.html)',
+  			'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Trident/4.0; TencentTraveler 4.0; Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1) )',
+  			'Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)',
+  			'Mozilla/5.0 (Windows NT 5.1) AppleWebKit/534.55.3 (KHTML, like Gecko) Version/5.1.5 Safari/534.55.3',
+    ]
+
+    return user_agent[random.randint(0,18)]
+"""随机获取一条代理Ip"""
+def getProxyIp(conn):
+    skip = conn.find().count()
+    if not skip:
+        return False
+
+    skip_num = random.randint(0,skip-1)
+    data = conn.find().skip(skip_num).limit(1)
+    proxy_list = list(data)
+
+    if not len(proxy_list):
+    	return False
+    return proxy_list[0]
 
 '''
 获取api数据中的指定字段内容，dict_get中的索引为api的data存放字段（没有则为空），
@@ -152,10 +217,9 @@ def getInputName(soup):
 '''主功能二：爬取网盘之家的搜索结果页面并存入数据库'''
 
 '''从百度网盘之家获取网盘搜索列表地址'''
-def getSearchList(mongo_conn,mongo_save):
+def getSearchList(mongo_conn , mongo_save , proxy_conn):
     url = "http://wowenda.com/"
-    (cookie,opener) = getWebOpener()  #获取一个一面的cookie和opener
-    # opener = getOpener({"Cookie":"UM_distinctid=15d2303b5061b9-013d0e5a6b0e3b-5d6a3f77-fa000-15d2303b50711e; uid=4da641e28022a7bb498f3b82e8e165d7; ASPSESSIONIDAQDQDCSD=PIHEGHNCBMPEOLGKNKMHIHGJ; CNZZDATA2248624=cnzz_eid%3D2005743748-1499526615-null%26ntime%3D1504587215; Hm_lvt_d0a6a9f299b739eae1eeb1ef415604ca=1503058995,1504231480,1504496694,1504588205; Hm_lpvt_d0a6a9f299b739eae1eeb1ef415604ca=1504588205"})
+    (cookie,opener) = getWebOpener(  )  #获取一个一面的cookie和opener
     resp = openPageWithCookie(opener,url)
     soup = getPageSoupByText(resp.read().decode("utf-8"))
 
@@ -172,15 +236,15 @@ def getSearchList(mongo_conn,mongo_save):
 
         (search_name,dict_res) = getInputName(soup)
         dict_res[search_name] = title['title']
-        dict_res['category']  = title['category']
         url_query = urllib.parse.urlencode(dict_res)
         mongo_conn.update({"_id":title['_id']},{"$set":{"status":2}})  #搜索正在处理的关键字状态更新为2
         
         for page_url in get100Page(opener,"search?r=0&"+url_query):
             print(page_url)
             # soup = getWebPageOfSoup(url,url_query)
-            page = openPageWithCookie(opener,page_url)
-            soup = getPageSoupByText(page.read().decode("utf-8"))
+            soup = getPageByProxyOpener(page_url,proxy_conn)
+            # page = openPageWithCookie(opener,page_url)
+            # soup = getPageSoupByText(page.read().decode("utf-8"))
             # print(soup.prettify())
             list_res = soup.select("li.bt > a")
             list_sizes = soup.select("li > span:nth-of-type(1)")
@@ -195,7 +259,7 @@ def getSearchList(mongo_conn,mongo_save):
     return total
 
 """主功能三：从盘多多获取真实的百度云资源链接"""
-def getBaiduPanUrl(mg_conn):
+def getBaiduPanUrl(mg_conn,proxy_conn):
     is_run = 1
     count = 0
 
@@ -211,7 +275,8 @@ def getBaiduPanUrl(mg_conn):
 
         mg_conn.update({"_id":title['_id']},{"$set":{"status":2}})  # 正在获取百度云地址
 
-        soup = getWebPageOfSoup(title['url'])
+        # soup = getWebPageOfSoup(title['url'])
+        soup = getPageByProxyOpener(title['url'],proxy_conn)
         next_url_tag = soup.select("div.m_down > a")
         print(next_url_tag)
         if not len(next_url_tag):
@@ -221,7 +286,8 @@ def getBaiduPanUrl(mg_conn):
         next_url_tag = next_url_tag[0]
         next_url = next_url_tag['href']
 
-        soup = getWebPageOfSoup(next_url)
+        # soup = getWebPageOfSoup(next_url)
+        soup = getPageByProxyOpener(next_url,proxy_conn)
         org_url = soup.select("body > div > meta")
         if not len(org_url):
             continue
