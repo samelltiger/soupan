@@ -1,6 +1,7 @@
 # coding=utf-8
 import random
 import urllib.request,urllib.error
+import http.client
 
 import lib.OpenPageFun as op
 
@@ -97,7 +98,7 @@ def testProxy(conn):
 			
 			print(get_one_proxy)
 			
-		except urllib.error.URLError as err:
+		except (urllib.error.URLError,http.client.RemoteDisconnected):
 			conn.remove({"_id":get_one_proxy["_id"]})
 			print("remove:",get_one_proxy)
 			# print(err.args)
