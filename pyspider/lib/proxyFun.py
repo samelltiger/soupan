@@ -1,6 +1,5 @@
 # coding=utf-8
 import random
-import requests
 import urllib.request,urllib.error
 
 import lib.OpenPageFun as op
