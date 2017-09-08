@@ -32,7 +32,7 @@ def getPageByProxyOpener(url,proxy_conn):
         try:
             resp = openPageWithCookie(opener,url)
             return getPageSoupByText(resp.read())
-        except urllib.error.URLError,http.client.RemoteDisconnected:
+        except (urllib.error.URLError,http.client.RemoteDisconnected):
             proxy_conn.remove({"_id":proxy["_id"]})
 
 """创建一个opener,并返回个cookie和opener"""
