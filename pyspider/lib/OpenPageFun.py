@@ -5,6 +5,7 @@ import time
 import json
 import http.cookiejar
 import random
+import http.client
 
 # 获取一个页面，返回urllib的响应
 def getWebPage(url,data=None):
@@ -31,7 +32,7 @@ def getPageByProxyOpener(url,proxy_conn):
         try:
             resp = openPageWithCookie(opener,url)
             return getPageSoupByText(resp.read())
-        except urllib.error.URLError:
+        except urllib.error.URLError,http.client.RemoteDisconnected:
             proxy_conn.remove({"_id":proxy["_id"]})
 
 """创建一个opener,并返回个cookie和opener"""
