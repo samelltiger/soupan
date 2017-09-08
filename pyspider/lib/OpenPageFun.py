@@ -26,6 +26,7 @@ def getPageSoupByText(page_text):
 def getPageByProxyOpener(url,proxy_conn):
     while 1:
         (proxy,opener) = getOpenerWithProxy( proxy_conn )
+        print(proxy)
         if not opener:
             exit()
 
