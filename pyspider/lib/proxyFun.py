@@ -98,7 +98,7 @@ def testProxy(conn):
 			
 			print(get_one_proxy)
 			
-		except (urllib.error.URLError,http.client.RemoteDisconnected,ConnectionResetError):
+		except (urllib.error.URLError,http.client.RemoteDisconnected,ConnectionResetError,TimeoutError):
 			conn.remove({"_id":get_one_proxy["_id"]})
 			print("remove:",get_one_proxy)
 			# print(err.args)

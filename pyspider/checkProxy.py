@@ -11,8 +11,11 @@ mgclient = dbFun.getMongoConnect('soupan')
 mg_save_proxy = mgclient('proxy')
 
 """测试代理ip是否有效"""
-count = mg_save_proxy.find().count()
+count = mg_save_proxy.find({"status":1}).count()
 if count > 5:
     proxy.testProxy(mg_save_proxy)
 
 print(__file__,"time: ",op.getFormatTime())
+
+# soup = op.getPageByProxyOpener("http://www.ip.con",mg_save_proxy)
+# print(soup.prettify())

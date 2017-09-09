@@ -33,7 +33,7 @@ def getPageByProxyOpener(url,proxy_conn):
         try:
             resp = openPageWithCookie(opener,url)
             return getPageSoupByText(resp.read())
-        except (urllib.error.URLError,http.client.RemoteDisconnected,ConnectionResetError):
+        except (urllib.error.URLError,http.client.RemoteDisconnected,ConnectionResetError,TimeoutError):
             proxy_conn.remove({"_id":proxy["_id"]})
 
 """创建一个opener,并返回个cookie和opener"""
@@ -278,21 +278,25 @@ def getBaiduPanUrl(mg_conn,proxy_conn):
         mg_conn.update({"_id":title['_id']},{"$set":{"status":2}})  # 正在获取百度云地址
 
         # soup = getWebPageOfSoup(title['url'])
-        soup = getPageByProxyOpener(title['url'],proxy_conn)
-        next_url_tag = soup.select("div.m_down > a")
-        print(next_url_tag)
-        if not len(next_url_tag):
-            print("没有收到a标签！")
-            continue
+        run = 1
+        while run:
+            soup = getPageByProxyOpener(title['url'],proxy_conn)
+            next_url_tag = soup.select("div.m_down > a")
+            print(next_url_tag)
+            if len(next_url_tag):
+                print("没有收到a标签！")
+                run = 0
 
         next_url_tag = next_url_tag[0]
         next_url = next_url_tag['href']
 
         # soup = getWebPageOfSoup(next_url)
-        soup = getPageByProxyOpener(next_url,proxy_conn)
-        org_url = soup.select("body > div > meta")
-        if not len(org_url):
-            continue
+        run = 1
+        while run:
+            soup = getPageByProxyOpener(next_url,proxy_conn)
+            org_url = soup.select("body > div > meta")
+            if len(org_url):
+                run = 0
 
         org_url = org_url[0]
         url = org_url['content']
@@ -304,7 +308,6 @@ def getBaiduPanUrl(mg_conn,proxy_conn):
         count += 1
     
     return count
-
 
 """将爬取结果存入wangpan 结果集"""
 def saveListToMongo(data_list,mongo_save,line_record):
