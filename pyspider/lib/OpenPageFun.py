@@ -244,12 +244,18 @@ def getSearchList(mongo_conn , mongo_save , proxy_conn):
         for page_url in get100Page(opener,"search?r=0&"+url_query):
             print(page_url)
             # soup = getWebPageOfSoup(url,url_query)
-            soup = getPageByProxyOpener(page_url,proxy_conn)
+            run = 1
+            while run:
+                soup = getPageByProxyOpener(page_url,proxy_conn)
+                list_res = soup.select("li.bt > a")
+                list_sizes = soup.select("li > span:nth-of-type(1)")
+                if len(list_res) or len(list_sizes):
+                    print("没有收到a标签！")
+                    run = 0
             # page = openPageWithCookie(opener,page_url)
             # soup = getPageSoupByText(page.read().decode("utf-8"))
             # print(soup.prettify())
-            list_res = soup.select("li.bt > a")
-            list_sizes = soup.select("li > span:nth-of-type(1)")
+            
             titles = [i.get_text() for i in list_res]
             urls = [i['href'] for i in list_res]
             sizes = [i.get_text() for i in list_sizes]
