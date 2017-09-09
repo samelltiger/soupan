@@ -12,5 +12,6 @@ mg_save_proxy = mgclient('proxy')
 
 """获取代理ip列表并保存"""
 count = proxy.getProxyIpOfXiCi( mg_save_proxy )
+proxy.testProxy(mg_save_proxy)
 
 print(__file__,"time: ",op.getFormatTime(),'insert count：',count)
