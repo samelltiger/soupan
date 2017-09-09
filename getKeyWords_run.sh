@@ -3,4 +3,4 @@ cd /data/wwwroot/soupan/pyspider
 source /etc/profile
 source activate python3
 
-python getKeyWords.py&
+/root/anaconda2/envs/python3/bin/python3.5 getKeyWords.py&

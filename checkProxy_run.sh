@@ -3,5 +3,5 @@ cd /data/wwwroot/soupan/pyspider
 source /etc/profile
 source activate python3
 
-python checkProxy.py&
+/root/anaconda2/envs/python3/bin/python3.5 checkProxy.py&
 
