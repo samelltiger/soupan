@@ -24,6 +24,7 @@ def getPageSoupByText(page_text):
 
 """通过proxy获取web页面，并将不能打开页面的代理ip删掉，返回一个soup对象"""
 def getPageByProxyOpener(url,proxy_conn):
+    time.sleep(3)
     while 1:
         (proxy,opener) = getOpenerWithProxy( proxy_conn )
         print(proxy)
