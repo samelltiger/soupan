@@ -28,7 +28,7 @@ def getPageByProxyOpener(url,proxy_conn):
     i = 0
     while 1:
         (proxy,opener) = getOpenerWithProxy( proxy_conn )
-        print(proxy)
+        print("proxy:",proxy)
         if not opener:
             exit()
 
