@@ -25,6 +25,7 @@ def getPageSoupByText(page_text):
 """通过proxy获取web页面，并将不能打开页面的代理ip删掉，返回一个soup对象"""
 def getPageByProxyOpener(url,proxy_conn):
     time.sleep(3)
+    i = 0
     while 1:
         (proxy,opener) = getOpenerWithProxy( proxy_conn )
         print(proxy)
@@ -32,10 +33,13 @@ def getPageByProxyOpener(url,proxy_conn):
             exit()
 
         try:
+            i += 1
             resp = openPageWithCookie(opener,url)
             return getPageSoupByText(resp.read())
         except (urllib.error.URLError,http.client.RemoteDisconnected,ConnectionResetError,TimeoutError):
             proxy_conn.remove({"_id":proxy["_id"]})
+            if i == 3:
+                return getWebPageOfSoup(url)
 
 """创建一个opener,并返回个cookie和opener"""
 def getWebOpener(filename=None):
