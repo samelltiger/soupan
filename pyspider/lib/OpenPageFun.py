@@ -237,6 +237,7 @@ def getSearchList(mongo_conn , mongo_save , proxy_conn):
         title_list = mongo_conn.find({'status':1},{'_id':1,'title':1,'category':1}).limit(1)
         title = list(title_list)
         if not title:
+            print("所有列表已爬取完成！")
             break
 
         title = title[0]
@@ -247,7 +248,7 @@ def getSearchList(mongo_conn , mongo_save , proxy_conn):
         mongo_conn.update({"_id":title['_id']},{"$set":{"status":2}})  #搜索正在处理的关键字状态更新为2
         
         for page_url in get100Page(opener,"search?r=0&"+url_query):
-            print(page_url)
+            print("获取的跳转页链接：",page_url)
             # soup = getWebPageOfSoup(url,url_query)
             run = 1
             while run:
@@ -255,7 +256,7 @@ def getSearchList(mongo_conn , mongo_save , proxy_conn):
                 list_res = soup.select("li.bt > a")
                 list_sizes = soup.select("li > span:nth-of-type(1)")
                 if len(list_res) or len(list_sizes):
-                    print("没有收到a标签！")
+                    print("以获取链接dom元素！" , list_res[0])
                     run = 0
             # page = openPageWithCookie(opener,page_url)
             # soup = getPageSoupByText(page.read().decode("utf-8"))
@@ -293,9 +294,9 @@ def getBaiduPanUrl(mg_conn,proxy_conn):
         while run:
             soup = getPageByProxyOpener(title['url'],proxy_conn)
             next_url_tag = soup.select("div.m_down > a")
-            print(next_url_tag)
+            
             if len(next_url_tag):
-                print("没有收到a标签！")
+                print("已获取链接dom元素！", next_url_tag)
                 run = 0
 
         next_url_tag = next_url_tag[0]
@@ -312,7 +313,7 @@ def getBaiduPanUrl(mg_conn,proxy_conn):
         org_url = org_url[0]
         url = org_url['content']
         url = url[url.index("h"):]
-        print(url)
+        print("网盘地址：" , url)
         # print(title['_id'])
         
         mg_conn.update({"_id":title['_id']},{"$set":{"baidu_url":url,"status":3}})    # 保存百度云地址
