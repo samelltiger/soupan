@@ -28,8 +28,9 @@ def getPageByProxyOpener(url,proxy_conn):
     i = 0
     while 1:
         (proxy,opener) = getOpenerWithProxy( proxy_conn )
-        print("proxy:",proxy)
+        
         if not opener:
+            print("proxy总数为",proxy)
             exit()
 
         try:
@@ -54,6 +55,7 @@ def getWebOpener(filename=None):
 def getOpenerWithProxy( conn ):
     proxy = getProxyIp( conn )
     if not proxy:
+        print("未获取到代理；")
         return (False,False)
 
     proxy_support = urllib.request.ProxyHandler({'http':"http://"+proxy['proxy']})
@@ -107,6 +109,7 @@ def getUserAgent():
 def getProxyIp(conn):
     skip = conn.find().count()
     if not skip:
+        print("代理总数为：" , skip)
         return False
 
     skip_num = random.randint(0,skip-1)
@@ -114,7 +117,9 @@ def getProxyIp(conn):
     proxy_list = list(data)
 
     if not len(proxy_list):
+        print("未获取到代理ip，总数为：" , skip , "跳过的数目为：" ,  skip_num)
     	return False
+
     return proxy_list[0]
 
 '''
