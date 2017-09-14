@@ -111,8 +111,11 @@ def getProxyIp(conn):
     if not skip:
         print("代理总数为：" , skip)
         return False
-
-    skip_num = random.randint(0,skip-1)
+    
+    if skip > 10:
+        skip_num = random.randint(0,skip-10)
+    else:
+        skip_num = 0
     data = conn.find().skip(skip_num).limit(1)
     proxy_list = list(data)
 
