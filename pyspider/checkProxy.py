@@ -15,6 +15,9 @@ count = mg_save_proxy.find({"status":1}).count()
 if count > 5:
     proxy.testProxy(mg_save_proxy)
 
+if mgclient("close")==True:
+    print("mongodb 链接已关闭")
+
 print(__file__,"time: ",op.getFormatTime())
 
 # soup = op.getPageByProxyOpener("http://www.ip.con",mg_save_proxy)

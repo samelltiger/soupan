@@ -19,4 +19,8 @@ mg_save_proxy = mgclient('proxy')
 
 count = op.getSearchList(mgtable , mg_save_panduoduo , mg_save_proxy)
 
+conn.close()
+if mgclient("close")==True:
+    print("mongodb 链接已关闭")
+
 print(__file__,"time: ",op.getFormatTime(),'insert count：',count)

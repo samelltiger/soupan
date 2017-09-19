@@ -25,5 +25,8 @@ def getMongoConnect(dbname):
     conn_client = pymongo.MongoClient('localhost',27017)
     db_link = conn_client[dbname]
     def getTable(tablename):
+        if tablename=="close":
+            db_link.close()
+            return True
         return db_link[tablename]
     return getTable

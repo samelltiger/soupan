@@ -14,4 +14,8 @@ mgtable = mgclient('keywords') # 保存从各个网站上获取到的搜索关�
 
 count = op.getListFromDb(conn,mgtable)
 
+conn.close()
+if mgclient("close")==True:
+    print("mongodb 链接已关闭")
+
 print(__file__,"time: ",op.getFormatTime(),'insert count:',count)

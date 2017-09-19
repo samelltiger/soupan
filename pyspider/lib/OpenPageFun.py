@@ -105,6 +105,7 @@ def getUserAgent():
     ]
 
     return user_agent[random.randint(0,18)]
+
 """随机获取一条代理Ip"""
 def getProxyIp(conn):
     skip = conn.find().count()
@@ -177,8 +178,6 @@ def getListFromDb(fromMysqlServer,toMongoServer):
     tdb = toMongoServer
     get_sql = "SELECT id,url,category,classes,next_class,is_api FROM search_website WHERE status=1 limit 1"
     cursor = fdb.cursor()
-    # cursor.execute(sql)
-    # site_list = cursor.fetchone()
 
     total = 0
     is_run = 1
@@ -327,6 +326,8 @@ def getBaiduPanUrl(mg_conn,proxy_conn):
         
         mg_conn.update({"_id":title['_id']},{"$set":{"baidu_url":url,"status":3}})    # 保存百度云地址
         count += 1
+        if count==50:  #每次执行只爬取50条记录
+            break
     
     return count
 
@@ -369,5 +370,8 @@ def getOpener(head):
     opener.addheaders = header  
     return opener  
 
+"""主功能四： 验证百度云链接是否有效"""
+def validUrl( mg_conn , mg_proxy):
+    url = mg_conn
 # print(getWebPage("http://www.imooc.com").read())
 # print(getWebPageOfSoup("http://www.imooc.com"))
