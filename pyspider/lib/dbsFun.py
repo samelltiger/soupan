@@ -26,7 +26,7 @@ def getMongoConnect(dbname):
     db_link = conn_client[dbname]
     def getTable(tablename):
         if tablename=="close":
-            db_link.close()
+            conn_client.close()
             return True
         return db_link[tablename]
     return getTable
