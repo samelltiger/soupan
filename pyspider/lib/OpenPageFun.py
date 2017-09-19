@@ -121,6 +121,10 @@ def getProxyIp(conn):
     proxy_list = list(data)
 
     if not len(proxy_list):
+        data = conn.find().limit(1)
+        proxy_list = list(data)
+
+    if not len(proxy_list):
         print(proxy_list)
         print("未获取到代理ip，总数为：" , skip , "跳过的数目为：" ,  skip_num)
         return False
