@@ -48,8 +48,8 @@ def proxySave(conn,data):
 		}
 		conn.insert_one(dict_ip)
 		count += 1
-		# if count >= 50:
-		# 	break
+		if count >= 70:
+			break
 	
 	return count
 
