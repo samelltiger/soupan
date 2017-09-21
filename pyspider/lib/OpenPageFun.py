@@ -39,6 +39,7 @@ def getPageByProxyOpener(url,proxy_conn):
             return getWebPageOfSoup(url)
 
         try:
+            i += 1
             resp = openPageWithCookie(opener,url)
             return getPageSoupByText(resp.read())
         except (urllib.error.URLError,http.client.RemoteDisconnected,ConnectionResetError,TimeoutError):
