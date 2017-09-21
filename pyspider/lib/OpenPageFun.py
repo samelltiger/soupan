@@ -27,7 +27,7 @@ def getPageByProxyOpener(url,proxy_conn):
     time.sleep(1)
     i = 0
     while 1:
-        # print("正在通过proxy获取页面：")
+        print("正在通过proxy获取页面：")
         (proxy,opener) = getOpenerWithProxy( proxy_conn )
         
         if not opener:
@@ -43,6 +43,7 @@ def getPageByProxyOpener(url,proxy_conn):
             resp = openPageWithCookie(opener,url)
             return getPageSoupByText(resp.read())
         except (urllib.error.URLError,http.client.RemoteDisconnected,ConnectionResetError,TimeoutError):
+            print("获取页面出错！")
             proxy_conn.remove({"_id":proxy["_id"]})
             if i == 3:
                 return getWebPageOfSoup(url)
