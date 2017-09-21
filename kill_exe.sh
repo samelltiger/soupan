@@ -12,3 +12,5 @@ kill -9 $pid
 done
 
 /etc/init.d/mongod restart
+
+/root/anaconda2/envs/python3/bin/python3.5 /data/wwwroot/soupan/pyspider/getReallyUrl.py&
