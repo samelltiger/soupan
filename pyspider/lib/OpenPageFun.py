@@ -340,6 +340,7 @@ def getBaiduPanUrl(mg_conn,proxy_conn):
         mg_conn.update({"_id":title['_id']},{"$set":{"baidu_url":url,"status":3}})    # 保存百度云地址
         count += 1
         if count==50:  #每次执行只爬取50条记录
+            print("已爬取50条记录，退出！")
             break
     
     return count
