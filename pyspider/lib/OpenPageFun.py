@@ -309,6 +309,7 @@ def getBaiduPanUrl(mg_conn,proxy_conn):
         # soup = getWebPageOfSoup(title['url'])
         run = 1
         while run:
+            print("正在获取dom元素：")
             soup = getPageByProxyOpener(title['url'],proxy_conn)
             next_url_tag = soup.select("div.m_down > a")
             
