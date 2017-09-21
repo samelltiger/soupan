@@ -33,6 +33,9 @@ def getPageByProxyOpener(url,proxy_conn):
         if not opener:
             print("proxy总数为",proxy)
             exit()
+        
+        if i == 3:
+            return getWebPageOfSoup(url)
 
         try:
             i += 1
@@ -294,8 +297,9 @@ def getBaiduPanUrl(mg_conn,proxy_conn):
         # is_run = 0
         title_list = mg_conn.find({'status':1},{'_id':1,'url':1}).limit(1)  # 爬取到盘多多地址但未得到百度云地址
         title = list(title_list)
-        print(title)
+        print("正在获取爬取记录！")
         if not len(title):
+            print("没有爬取的记录，退出！")
             break
 
         title = title[0]
