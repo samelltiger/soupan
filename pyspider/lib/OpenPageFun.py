@@ -41,6 +41,10 @@ def getPageByProxyOpener(url,proxy_conn):
         try:
             i += 1
             resp = openPageWithCookie(opener,url)
+            # if resp.getcode() != 200:
+            #     proxy_conn.remove({"_id":proxy["_id"]})
+            #     print("删除代理ip！")
+                
             return getPageSoupByText(resp.read())
         except (urllib.error.URLError,http.client.RemoteDisconnected,ConnectionResetError,TimeoutError):
             print("获取页面出错！")
