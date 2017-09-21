@@ -33,15 +33,13 @@ def getPageByProxyOpener(url,proxy_conn):
         if not opener:
             print("proxy总数为",proxy)
             exit()
-        
-        i += 1
-        print("第 %d 次尝试！"%(i))
-        if i == 3:
-            return getWebPageOfSoup(url)
 
         try:
             i += 1
+            if i == 3:
+                return getWebPageOfSoup(url)
             print("第 %d 次尝试！"%(i))
+            
             resp = openPageWithCookie(opener,url)
             # if resp.getcode() != 200:
             #     proxy_conn.remove({"_id":proxy["_id"]})
