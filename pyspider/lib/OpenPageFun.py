@@ -27,7 +27,7 @@ def getPageByProxyOpener(url,proxy_conn):
     time.sleep(1)
     i = 0
     while 1:
-        print("正在通过proxy获取页面：")
+        # print("正在通过proxy获取页面：")
         (proxy,opener) = getOpenerWithProxy( proxy_conn )
         
         if not opener:
@@ -298,7 +298,7 @@ def getBaiduPanUrl(mg_conn,proxy_conn):
         # is_run = 0
         title_list = mg_conn.find({'status':1},{'_id':1,'url':1}).limit(1)  # 爬取到盘多多地址但未得到百度云地址
         title = list(title_list)
-        print("正在获取爬取记录！")
+        # print("正在获取爬取记录！")
         if not len(title):
             print("没有爬取的记录，退出！")
             break
@@ -310,7 +310,7 @@ def getBaiduPanUrl(mg_conn,proxy_conn):
         # soup = getWebPageOfSoup(title['url'])
         run = 1
         while run:
-            print("正在获取dom元素：")
+            # print("正在获取dom元素：")
             soup = getPageByProxyOpener(title['url'],proxy_conn)
             next_url_tag = soup.select("div.m_down > a")
             
@@ -328,7 +328,7 @@ def getBaiduPanUrl(mg_conn,proxy_conn):
             org_url = soup.select("body > div > meta")
             if len(org_url):
                 run = 0
-            print("正在获取跳转页面：")
+            # print("正在获取跳转页面：")
 
         org_url = org_url[0]
         url = org_url['content']
