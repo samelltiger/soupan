@@ -40,6 +40,7 @@ def getPageByProxyOpener(url,proxy_conn):
 
         try:
             i += 1
+            print("第 %d 次尝试！"%(i))
             resp = openPageWithCookie(opener,url)
             # if resp.getcode() != 200:
             #     proxy_conn.remove({"_id":proxy["_id"]})
