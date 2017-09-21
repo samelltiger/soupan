@@ -14,7 +14,8 @@ mg_save_proxy.remove({"status":{"$in":[0,1]}})
 
 """获取代理ip列表并保存"""
 count = proxy.getProxyIpOfXiCi( mg_save_proxy )
-proxy.testProxy(mg_save_proxy)
+
+# proxy.testProxy(mg_save_proxy)
 
 if mgclient("close")==True:
     print("mongodb 链接已关闭")
