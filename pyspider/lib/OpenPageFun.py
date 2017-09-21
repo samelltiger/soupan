@@ -34,11 +34,11 @@ def getPageByProxyOpener(url,proxy_conn):
             print("proxy总数为",proxy)
             exit()
         
+        i += 1
         if i == 3:
             return getWebPageOfSoup(url)
 
         try:
-            i += 1
             resp = openPageWithCookie(opener,url)
             return getPageSoupByText(resp.read())
         except (urllib.error.URLError,http.client.RemoteDisconnected,ConnectionResetError,TimeoutError):
