@@ -10,7 +10,7 @@ mgtable = mgclient('keywords') # 保存从各个网站上获取到的搜索关�
 '''proxy ip的保存的表'''
 mg_save_proxy = mgclient('proxy')
 
-mg_save_proxy.remove({"status":{"$in":[0,1]}})
+# mg_save_proxy.remove({"status":{"$in":[0,1]}})
 
 """获取代理ip列表并保存"""
 count = proxy.getProxyIpOfXiCi( mg_save_proxy )
