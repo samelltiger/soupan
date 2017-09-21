@@ -35,6 +35,7 @@ def getPageByProxyOpener(url,proxy_conn):
             exit()
         
         i += 1
+        print("第 %d 次尝试！"%(i))
         if i == 3:
             return getWebPageOfSoup(url)
 
