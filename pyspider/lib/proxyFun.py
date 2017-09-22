@@ -95,7 +95,7 @@ def testProxy(conn):
 		opener.addheaders = [("User-Agent", getUserAgent())]
 
 		try:
-			resp = opener.open("http://www.baidu.com/")
+			resp = opener.open("http://www.baidu.com/",None,timeout=3)
 			conn.update({"_id":get_one_proxy["_id"]},{"$set":{"status":0}})
 			
 			print(get_one_proxy)
