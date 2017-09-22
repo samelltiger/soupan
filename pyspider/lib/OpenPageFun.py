@@ -76,7 +76,7 @@ def getOpenerWithProxy( conn ):
 
 """带有cookie信息打开页面"""
 def openPageWithCookie(opener,url,data=None):
-    page = opener.open(url,data)
+    page = opener.open(url,data,timeout=3)
     return page
 
 # 通过节点的className从页面获取搜索数据(一个完整的页面)
