@@ -11,7 +11,7 @@ import socket
 # 获取一个页面，返回urllib的响应
 def getWebPage(url,data=None):
     request = urllib.request.Request(url,data)
-    response = urllib.request.urlopen(request)
+    response = urllib.request.urlopen(request) #,None,timeout=4 设置超时，并接收错误
     return response
 
 # 获取一个页面，返回BeautifulSoup对象
