@@ -6,6 +6,7 @@ import json
 import http.cookiejar
 import random
 import http.client
+import socket
 
 # 获取一个页面，返回urllib的响应
 def getWebPage(url,data=None):
@@ -46,7 +47,7 @@ def getPageByProxyOpener(url,proxy_conn):
             #     print("删除代理ip！")
                 
             return getPageSoupByText(resp.read())
-        except (urllib.error.URLError,http.client.RemoteDisconnected,ConnectionResetError,TimeoutError):
+        except (urllib.error.URLError,http.client.RemoteDisconnected,ConnectionResetError,TimeoutError,socket.timeout):
             print("获取页面出错！")
             proxy_conn.remove({"_id":proxy["_id"]})
             if i == 3:
@@ -76,7 +77,7 @@ def getOpenerWithProxy( conn ):
 
 """带有cookie信息打开页面"""
 def openPageWithCookie(opener,url,data=None):
-    page = opener.open(url,data,timeout=3)
+    page = opener.open(url,data,timeout=4)
     return page
 
 # 通过节点的className从页面获取搜索数据(一个完整的页面)

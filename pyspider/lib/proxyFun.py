@@ -2,6 +2,7 @@
 import random
 import urllib.request,urllib.error
 import http.client
+import socket
 
 import lib.OpenPageFun as op
 
@@ -95,12 +96,12 @@ def testProxy(conn):
 		opener.addheaders = [("User-Agent", getUserAgent())]
 
 		try:
-			resp = opener.open("http://www.baidu.com/",None,timeout=3)
+			resp = opener.open("http://www.baidu.com/",None,timeout=4)
 			conn.update({"_id":get_one_proxy["_id"]},{"$set":{"status":0}})
 			
 			print(get_one_proxy)
 			
-		except (urllib.error.URLError,http.client.RemoteDisconnected,ConnectionResetError,TimeoutError):
+		except (urllib.error.URLError,http.client.RemoteDisconnected,ConnectionResetError,TimeoutError,socket.timeout):
 			conn.remove({"_id":get_one_proxy["_id"]})
 			print("remove:",get_one_proxy)
 			# print(err.args)
